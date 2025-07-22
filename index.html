@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie History</title>
+  <style>
+    body { font-family: Arial; margin: 30px; }
+    input, textarea { margin: 5px; padding: 5px; }
+    table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>🎬 Movie History</h1>
+  <form id="movieForm">
+    <input type="text" id="name" placeholder="Movie Name" required>
+    <input type="text" id="from" placeholder="From (e.g., Netflix)" required>
+    <input type="date" id="dateSeen" required>
+    <textarea id="comment" placeholder="Comment" rows="2"></textarea>
+    <button type="submit">Add Movie</button>
+  </form>
+
+  <table id="movieTable">
+    <thead>
+      <tr>
+        <th>Movie Name</th>
+        <th>From</th>
+        <th>Date Seen</th>
+        <th>Comment</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('movieForm');
+    const table = document.querySelector('#movieTable tbody');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const from = document.getElementById('from').value;
+      const dateSeen = document.getElementById('dateSeen').value;
+      const comment = document.getElementById('comment').value;
+
+      const row = `<tr>
+        <td>${name}</td>
+        <td>${from}</td>
+        <td>${dateSeen}</td>
+        <td>${comment}</td>
+      </tr>`;
+
+      table.innerHTML += row;
+
+      // Optional: Save to local storage
+      let movies = JSON.parse(localStorage.getItem('movies') || '[]');
+      movies.push({ name, from, dateSeen, comment });
+      localStorage.setItem('movies', JSON.stringify(movies));
+
+      form.reset();
+    });
+
+    // Load from local storage on page load
+    window.onload = () => {
+      const movies = JSON.parse(localStorage.getItem('movies') || '[]');
+      movies.forEach(m => {
+        const row = `<tr>
+          <td>${m.name}</td>
+          <td>${m.from}</td>
+          <td>${m.dateSeen}</td>
+          <td>${m.comment}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+    };
+  </script>
+</body>
+</html>
